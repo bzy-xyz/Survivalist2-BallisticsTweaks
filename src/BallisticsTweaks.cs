@@ -18,6 +18,9 @@ namespace BallisticsTweaks
             var harmony = new Harmony(modEntry.Info.Id);
             harmony.PatchAll();
 
+            typeof(AmmoWeapon).GetField("Spread", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, 2.0f);
+            typeof(AmmoWeapon).GetField("MaxInaccuracyAngle", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).SetValue(null, 5.0f);
+
             mod = modEntry;
 
             return true;
@@ -40,6 +43,13 @@ namespace BallisticsTweaks
 
             return (sample - 0.5f) * (sigma / sample_sigma);
         }
+
+        public static float NextFakeRayleigh(float sigma, float seed) {
+            float x1 = NextFakeGaussian(0f, sigma, seed);
+            float x2 = NextFakeGaussian(0f, sigma, seed + 1023f);
+
+            return Mathf.Sqrt(x1 * x1 + x2 * x2);
+        }
     }
     
     [HarmonyPatch(typeof(AmmoWeapon), "GetRandomFireDir")]
@@ -47,7 +57,7 @@ namespace BallisticsTweaks
         static bool Prefix(ref Vector3 __result, Character character, Vector3 dir, float spread, float seed)
         {
             float perpAngle = MathUtil.RandomFloat(seed) * ((float)Math.PI * 2f);
-            float spreadAngle = Mathf.Abs(FakeGaussianDistribution.NextFakeGaussian(0f, spread / 2.0f, seed + 1000f));
+            float spreadAngle = Mathf.Abs(FakeGaussianDistribution.NextFakeRayleigh(spread / 2.0f, seed + 1000f));
 
 		    __result = AmmoWeapon.GetFireDir(character, dir, perpAngle, spreadAngle);
             return false;

@@ -4,7 +4,8 @@ Ballistics Tweaks
 A mod for Survivalist: Invisible Strain.
 
 By default, non-aimed shots will diverge from the aimpoint in a pattern
-that is thicker at the edges and thinner in the center. The angular
+that is thicker at the edges and thinner in the center, such that the
+result is distributed uniformly within a unit circle. The angular 
 pattern width changes from 10 degrees for a maximally unaimed shot to 0
 degrees for an aimed shot.
 
@@ -13,18 +14,22 @@ degree spread, making these weapons dubiously effective at any
 significant range.
 
 This mod changes the distribution of all ranged weapon spread to be
-closer to a normal distribution, scaled such that around 95% of the
-shots are within the requested spread. This should dramatically increase
-the lethality of all ranged weapons beyond their optimal range, as well
-as the lethality of shotguns at any range.
+closer to a normal distribution, scaled such that around 99% of the
+shots are within the requested spread. This should somewhat increase
+the overall lethality of all ranged weapons beyond their optimal range,
+as well as the lethality of shotguns at any range.
 
-This is technically accomplished by rescaling a Bates distribution
-(average of 5 uniform random samples), which avoids trigonometry while
-providing a "good enough" approximation for gameplay. As a side effect,
-all raycasts are restricted to about 1.6 times the requested spread,
-eliminating the need to worry about pathological effects like pellets
-going backwards ever happening.
+This is technically accomplished with the help of rescaling a Bates 
+distribution (average of 5 uniform random samples), which avoids 
+trigonometry while providing a "good enough" approximation for gameplay.
+The radial deflection angle should be Rayleigh distributed to achieve a
+bivariate normal distribution, which we accomplish by taking the 
+Euclidean norm of two random variates.
 
+We also tweak the shotgun spread to bring it closer in line with
+real-world numbers, as well as the maximum inaccuracy angle. Untrained
+or impatient characters will still tend to miss their targets most of 
+the time, but less egregiously than under vanilla settings.
 
 Requirements
 ------------
