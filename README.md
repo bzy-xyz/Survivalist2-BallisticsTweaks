@@ -4,8 +4,8 @@ Ballistics Tweaks
 A mod for Survivalist: Invisible Strain.
 
 By default, non-aimed shots will diverge from the aimpoint in a pattern
-that is thicker at the edges and thinner in the center, such that the
-result is distributed uniformly within a unit circle. The angular 
+that is angularly thicker at the edges and thinner in the center, such that 
+the result is distributed uniformly within a unit circle. The angular 
 pattern width changes from 10 degrees for a maximally unaimed shot to 0
 degrees for an aimed shot.
 
